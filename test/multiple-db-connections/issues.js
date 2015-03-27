@@ -11,12 +11,18 @@ describe('issues', function () {
 
     it('should play nice with text search plugin', function (done) {
         var Page = pageModel(mongotest.connection);
-        var page = new Page({ title : 'Title', content : 'content', path : '/path' });
+        var page = new Page({
+            title: 'Title',
+            content: 'content',
+            path: '/path'
+        });
 
-        page.save(function(err) {
+        page.save(function (err) {
             expect(err).to.not.exist;
 
-            Page.VersionedModel.findOne({ refId : page._id }, function(err, versionedModel) {
+            Page.VersionedModel.findOne({
+                refId: page._id
+            }, function (err, versionedModel) {
                 expect(err).to.not.exist;
                 expect(versionedModel).to.be.ok;
 
@@ -25,7 +31,7 @@ describe('issues', function () {
         });
     });
 
-    it('should allow to create an empty versioned model', function(done) {
+    it('should allow to create an empty versioned model', function (done) {
         var UserSchema = new Schema({});
 
         UserSchema.plugin(version, {
@@ -37,10 +43,10 @@ describe('issues', function () {
 
         var user = new User({});
 
-        user.save(function(err) {
+        user.save(function (err) {
             expect(err).to.not.exist;
 
-            User.VersionedModel.find({}, function(err, models) {
+            User.VersionedModel.find({}, function (err, models) {
                 expect(err).to.not.exist;
                 expect(models).to.be.not.empty;
 
@@ -49,7 +55,7 @@ describe('issues', function () {
         });
     });
 
-    it('should delete versioned model when deleting the model', function(done) {
+    it('should delete versioned model when deleting the model', function (done) {
         var UserSchema = new Schema({});
 
         UserSchema.plugin(version, {
@@ -62,13 +68,13 @@ describe('issues', function () {
 
         var user = new User({});
 
-        user.save(function(err) {
+        user.save(function (err) {
             expect(err).to.not.exist;
 
-            user.remove(function(err) {
+            user.remove(function (err) {
                 expect(err).to.not.exist;
 
-                User.VersionedModel.find({}, function(err, models) {
+                User.VersionedModel.find({}, function (err, models) {
                     expect(err).to.not.exist;
                     expect(models).to.be.empty;
 
@@ -78,7 +84,7 @@ describe('issues', function () {
         });
     });
 
-    it('should delete versioned model when deleting the model in collection mode', function(done) {
+    it('should delete versioned model when deleting the model in collection mode', function (done) {
         var UserSchema = new Schema({});
 
         UserSchema.plugin(version, {
@@ -92,13 +98,13 @@ describe('issues', function () {
 
         var user = new User({});
 
-        user.save(function(err) {
+        user.save(function (err) {
             expect(err).to.not.exist;
 
-            user.remove(function(err) {
+            user.remove(function (err) {
                 expect(err).to.not.exist;
 
-                User.VersionedModel.find({}, function(err, models) {
+                User.VersionedModel.find({}, function (err, models) {
                     expect(err).to.not.exist;
                     expect(models).to.be.empty;
 
@@ -108,46 +114,7 @@ describe('issues', function () {
         });
     });
 
-    it('should not save a versioned model when field is excluded', function(done) {
-        var UserSchema = new Schema({ excludeThisField : String, notExcludeThisField : String });
-
-        UserSchema.plugin(version, {
-            logError: true,
-            ignorePaths: 'excludeThisField',
-            collection: 'User_should_not_save_a_versioned_model_when_field_is_excluded_versions'
-        });
-
-        var User = mongotest.connection.model('User_should_not_save_a_versioned_model_when_field_is_excluded', UserSchema);
-
-        var user = new User({ });
-
-        user.save(function(err) {
-            expect(err).to.not.exist;
-
-            user.excludeThisField = 'ThisShouldBeIgnoredFromVersioning';
-
-            user.save(function(err) {
-                expect(err).to.not.exist;
-
-                user.notExcludeThisField = 'ThisShouldNotBeIgnoredFromVersioning';
-
-                user.save(function(err) {
-                    expect(err).to.not.exist;
-
-                    User.VersionedModel.findOne({ refId : user._id }, function(err, model) {
-                        expect(err).to.not.exist;
-                        expect(model).to.be.not.empty;
-
-                        expect(model.versions.length).to.equal(2); // One update should be ignored
-
-                        done();
-                    });
-                });
-            });
-        });
-    });
-
-    it('should ignore unique indexes in cloned model', function(done){
+    it('should ignore unique indexes in cloned model', function (done) {
         var UserSchema = new Schema({
             module: {
                 type: Schema.Types.ObjectId,
@@ -191,7 +158,9 @@ describe('issues', function () {
                 user.save(function (err, user) {
                     expect(err).to.not.exist;
 
-                    User.VersionedModel.findOne({ refId : user._id }, function(err, model) {
+                    User.VersionedModel.findOne({
+                        refId: user._id
+                    }, function (err, model) {
                         expect(err).to.not.exist;
                         expect(model).to.be.not.empty;
 
@@ -202,28 +171,24 @@ describe('issues', function () {
         });
     });
 
-    it('should not break when using the plugin with collection strategy #10', function() {
+    it('should not break when using the plugin with collection strategy #10', function () {
         var schema = new mongoose.Schema({
-          title: { type: String, required: true, trim: true },
-          content: { type: String, trim: true }
+            title: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            content: {
+                type: String,
+                trim: true
+            }
         });
 
-        schema.plugin(version, { strategy: 'collection', collection: 'PageVersionsCollectionIssue10' });
+        schema.plugin(version, {
+            collection: 'PageVersionsCollectionIssue10'
+        });
 
         var model = mongotest.connection.model('PageIssue10CollectionStrategy', schema);
-
-        expect(model).to.exist;
-    });
-
-    it('should not break when using the plugin with array strategy #10', function() {
-        var schema = new mongoose.Schema({
-            title: { type: String, required: true, trim: true },
-            content: { type: String, trim: true }
-        });
-
-        schema.plugin(version, { strategy: 'array', collection: 'PageVersionsArrayIssue10' });
-
-        var model = mongotest.connection.model('PageIssue10ArrayStrategy', schema);
 
         expect(model).to.exist;
     });
