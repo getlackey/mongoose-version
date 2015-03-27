@@ -1,20 +1,32 @@
-var setSchemaOptions = require('../lib/set-schema-options');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var expect = require('chai').expect;
+/*jslint node:true */
+/*global describe, it*/
+'use strict';
 
-describe('set-schema-options', function() {
-  it('should set options for passed schema', function() {
-    var testSchema = new Schema({ name: String, date: Date });
+var setSchemaOptions = require('../lib/set-schema-options'),
+    mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    expect = require('chai').expect;
 
-    setSchemaOptions(testSchema, { option : true});
+describe('set-schema-options', function () {
+    it('should set options for passed schema', function () {
+        var testSchema = new Schema({
+            name: String,
+            date: Date
+        });
 
-    expect(testSchema.get('option')).to.equal(true);
-  });
+        setSchemaOptions(testSchema, {
+            option: true
+        });
 
-  it('should set do nothing if no option object was passed as argument', function() {
-    var testSchema = new Schema({ name: String, date: Date });
+        expect(testSchema.get('option')).to.equal(true);
+    });
 
-    setSchemaOptions(testSchema);
-  });
+    it('should set do nothing if no option object was passed as argument', function () {
+        var testSchema = new Schema({
+            name: String,
+            date: Date
+        });
+
+        setSchemaOptions(testSchema);
+    });
 });

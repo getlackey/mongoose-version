@@ -1,21 +1,25 @@
-var expect = require('chai').expect;
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var mongotest = require('./mongotest');
-var version = require('../../lib/version');
-var pageModel = require('../fixtures/page');
+/*jslint node:true, nomen:true, unparam:true */
+/*global describe, it, beforeEach, afterEach*/
+'use strict';
+
+var expect = require('chai').expect,
+    mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    mongotest = require('./mongotest'),
+    version = require('../../lib/version'),
+    pageModel = require('../fixtures/page');
 
 describe('issues', function () {
     beforeEach(mongotest.prepareDb('mongodb://localhost/mongoose_version_issues_tests'));
     afterEach(mongotest.disconnect());
 
     it('should play nice with text search plugin', function (done) {
-        var Page = pageModel(mongotest.connection);
-        var page = new Page({
-            title: 'Title',
-            content: 'content',
-            path: '/path'
-        });
+        var Page = pageModel(mongotest.connection),
+            page = new Page({
+                title: 'Title',
+                content: 'content',
+                path: '/path'
+            });
 
         page.save(function (err) {
             expect(err).to.not.exist;
@@ -32,16 +36,18 @@ describe('issues', function () {
     });
 
     it('should allow to create an empty versioned model', function (done) {
-        var UserSchema = new Schema({});
+        var UserSchema = new Schema({}),
+            User,
+            user;
 
         UserSchema.plugin(version, {
             logError: true,
             collection: 'userVersions'
         });
 
-        var User = mongotest.connection.model('User', UserSchema);
+        User = mongotest.connection.model('User', UserSchema);
 
-        var user = new User({});
+        user = new User({});
 
         user.save(function (err) {
             expect(err).to.not.exist;
@@ -56,7 +62,9 @@ describe('issues', function () {
     });
 
     it('should delete versioned model when deleting the model', function (done) {
-        var UserSchema = new Schema({});
+        var UserSchema = new Schema({}),
+            User,
+            user;
 
         UserSchema.plugin(version, {
             logError: true,
@@ -64,9 +72,9 @@ describe('issues', function () {
             collection: 'User_should_be_deleted_when_model_is_deleted_versions'
         });
 
-        var User = mongotest.connection.model('User_should_be_deleted_when_model_is_deleted', UserSchema);
+        User = mongotest.connection.model('User_should_be_deleted_when_model_is_deleted', UserSchema);
 
-        var user = new User({});
+        user = new User({});
 
         user.save(function (err) {
             expect(err).to.not.exist;
@@ -85,7 +93,9 @@ describe('issues', function () {
     });
 
     it('should delete versioned model when deleting the model in collection mode', function (done) {
-        var UserSchema = new Schema({});
+        var UserSchema = new Schema({}),
+            User,
+            user;
 
         UserSchema.plugin(version, {
             logError: true,
@@ -94,9 +104,9 @@ describe('issues', function () {
             strategy: 'collection'
         });
 
-        var User = mongotest.connection.model('User_should_be_deleted_when_model_is_in_collection_mode_deleted', UserSchema);
+        User = mongotest.connection.model('User_should_be_deleted_when_model_is_in_collection_mode_deleted', UserSchema);
 
-        var user = new User({});
+        user = new User({});
 
         user.save(function (err) {
             expect(err).to.not.exist;
@@ -116,15 +126,17 @@ describe('issues', function () {
 
     it('should ignore unique indexes in cloned model', function (done) {
         var UserSchema = new Schema({
-            module: {
-                type: Schema.Types.ObjectId,
-                required: true
-            },
-            slug: {
-                type: String,
-                required: true
-            }
-        });
+                module: {
+                    type: Schema.Types.ObjectId,
+                    required: true
+                },
+                slug: {
+                    type: String,
+                    required: true
+                }
+            }),
+            User,
+            user;
 
         UserSchema.index({
             module: 1,
@@ -138,9 +150,9 @@ describe('issues', function () {
             collection: 'User_should_ignore_indexes_in_cloned_model_versions'
         });
 
-        var User = mongotest.connection.model('User_should_ignore_indexes_in_cloned_model', UserSchema);
+        User = mongotest.connection.model('User_should_ignore_indexes_in_cloned_model', UserSchema);
 
-        var user = new User({
+        user = new User({
             module: '538c5caa4f019dd4225fe4f7',
             slug: 'test-module'
         });
@@ -173,22 +185,23 @@ describe('issues', function () {
 
     it('should not break when using the plugin with collection strategy #10', function () {
         var schema = new mongoose.Schema({
-            title: {
-                type: String,
-                required: true,
-                trim: true
-            },
-            content: {
-                type: String,
-                trim: true
-            }
-        });
+                title: {
+                    type: String,
+                    required: true,
+                    trim: true
+                },
+                content: {
+                    type: String,
+                    trim: true
+                }
+            }),
+            model;
 
         schema.plugin(version, {
             collection: 'PageVersionsCollectionIssue10'
         });
 
-        var model = mongotest.connection.model('PageIssue10CollectionStrategy', schema);
+        model = mongotest.connection.model('PageIssue10CollectionStrategy', schema);
 
         expect(model).to.exist;
     });
