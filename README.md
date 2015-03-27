@@ -37,11 +37,8 @@ model of page, for example for querying old versions of a document.
 ## Option keys and defaults
 * collection: name of the collection to persist versions to. The default is 'versions'. You should supply this option if you're using mongoose-version on more than one schema.
 * suppressVersionIncrement: mongoose-version will not increment the version of the saved model before saving the model by default. To turn on auto version increment set this option to false. Default: `true`
-* strategy: mongoose-version allows versioned document to be saved as multiple documents in a collection or in a single document in a version array. In case you want to save documents in an array specify `array` strategy, for storing versioned documents in multiple documents specify `collection` strategy. Default `array`.
-* maxVersions: Only valid for `array` strategy. Specifies how many historic versions of a document should be kept. Defaults to `Number.MAX_VALUE`.
 * mongoose: Pass a mongoose instance to work with
 * removeVersions: Removes versions when origin document is removed. Defaults to `false`
-* ignorePaths: Defines an array of document field names that do not trigger a new version to be created when this field was changed. Only working with array strategy (default strategy). Defaults to `[]`.
 * Options are passed to a newly created mongoose schemas as settings, so you may use any [option supported by mongoose](http://mongoosejs.com/docs/guide.html#options)
 
 In case you only want to specify the collection name, you can pass a string instance to options that is taken as collection name. Options may be passed as follows:
