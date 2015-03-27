@@ -10,7 +10,7 @@
         "email": "christoph.walcher@gmail.com",
         "description": "Author of the forked plugin https://github.com/saintedlama/mongoose-version"
     }],
-    "license": "Apache 2",
+    "license": "BSD",
     "keywords": [
         "mongoose",
         "plugin",
