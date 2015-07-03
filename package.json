@@ -1,7 +1,7 @@
 {
     "name": "lackey-mongoose-version",
     "description": "Mongoose plugin to save old versions of saved documents",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "main": "lib/version.js",
     "repository": "git://github.com/getlackey/mongoose-version.git",
     "author": "Enigma Marketing",
@@ -25,7 +25,7 @@
         "istanbul": "^0.3.2",
         "mocha": "~1.20.0",
         "mongoose-text-search": "0.0.2",
-        "mongoose": "~3.8.12",
+        "mongoose": "~3.8.12"
     },
     "scripts": {
         "test": "mocha --recursive -R spec test/",
