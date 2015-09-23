@@ -1,4 +1,4 @@
-/*jslint node:true, expr: true*/
+/*jslint node:true */
 /*global describe, it, beforeEach, afterEach*/
 'use strict';
 
@@ -9,7 +9,8 @@ var expect = require('chai').expect,
     version = require('../../lib/version');
 
 describe('version', function () {
-    beforeEach(mongotest.prepareDb('mongodb://localhost/mongoose_version_tests'));
+    var dbconn = (process.env.BOXEN_MONGODB_URL || 'mongodb://localhost/');
+    beforeEach(mongotest.prepareDb(dbconn + 'mongoose_version_tests'));
     afterEach(mongotest.disconnect());
 
     describe('#VersionModel', function () {

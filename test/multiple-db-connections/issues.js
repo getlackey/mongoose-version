@@ -10,7 +10,8 @@ var expect = require('chai').expect,
     pageModel = require('../fixtures/page');
 
 describe('issues', function () {
-    beforeEach(mongotest.prepareDb('mongodb://localhost/mongoose_version_issues_tests'));
+    var dbconn = (process.env.BOXEN_MONGODB_URL || 'mongodb://localhost/');
+    beforeEach(mongotest.prepareDb(dbconn + 'mongoose_version_issues_tests'));
     afterEach(mongotest.disconnect());
 
     it('should play nice with text search plugin', function (done) {
