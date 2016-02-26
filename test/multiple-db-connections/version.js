@@ -7,7 +7,8 @@ var expect = require('chai').expect,
     mongoose = Bluebird.promisifyAll(require('mongoose')),
     Schema = mongoose.Schema,
     mongotest = require('./mongotest'),
-    version = require('../../lib/version');
+    version = require('../../lib/version'),
+    VersionError = require('mongoose/lib/error/version');
 
 describe('version', function () {
     beforeEach(mongotest.prepareDb('mongodb://localhost/mongoose_version_tests'));
@@ -60,6 +61,82 @@ describe('version', function () {
                 done();
             });
         });
+    });
+
+    it('should NOT save a version model when saving origin model fails', function (done) {
+        var testSchema = new Schema({
+                name: String
+            }),
+            Test,
+            test;
+
+        testSchema.plugin(version, {
+            collection: 'should_save_version_of_origin_model_versions',
+            suppressVersionIncrement: false // let's increment the version on updates
+        });
+
+        Test = mongotest.connection.model('should_save_version_of_origin_model', testSchema);
+
+        test = new Test({
+            name: 'franz'
+        });
+
+        test.saveAsync()
+        .then(function (doc) {
+            expect(doc).to.have.a.property('__v', 0);
+        })
+        .then(function(){
+            return Test.VersionedModel.findAsync({
+                refId: test._id,
+            })
+            .then(function (versionedModels) {
+                expect(versionedModels).to.have.a.lengthOf(1);
+                expect(versionedModels[0]).to.be.ok;
+                expect(versionedModels[0]).to.have.a.property('name', 'franz');
+                expect(versionedModels[0]).to.have.a.property('refVersion', 0);
+            });
+        })
+        .then(function () {
+            test.name = 'Franz I';
+            test.__v = 0;
+            return test.saveAsync()
+            .then(function (doc) {
+                expect(doc).to.have.a.property('__v', 1);
+            });
+        })
+        .then(function () {
+            return Test.VersionedModel.findAsync({
+                refId: test._id
+            })
+            .then(function (versionedModels) {
+                expect(versionedModels).to.have.a.lengthOf(2);
+                expect(versionedModels[0]).to.be.ok;
+                expect(versionedModels[0]).to.have.a.property('name', 'franz');
+                expect(versionedModels[0]).to.have.a.property('refVersion', 0);
+                expect(versionedModels[1]).to.be.ok;
+                expect(versionedModels[1]).to.have.a.property('name', 'Franz I');
+                expect(versionedModels[1]).to.have.a.property('refVersion', 1);
+            });
+        })
+        .then(function () {
+            test.name = 'Franz Invalid';
+            test.__v = 0; // create a version conflict
+            return test.saveAsync()
+            .then(function(){ expect(false).to.be.ok; }) // should not happen
+            .catch(VersionError, function(err){
+                expect(err.name).to.eql('VersionError');
+            });
+        })
+        .then(function () {
+            return Test.VersionedModel.findAsync({
+                refId: test._id
+            })
+            .then(function (versionedModels) {
+                expect(versionedModels).to.have.a.lengthOf(2);
+            });
+        })
+        .then(done.bind(this, null))
+        .catch(done);
     });
 
     it('should save the correct version, defined at the versionKey of the origin model', function (done) {
