@@ -1,34 +1,39 @@
 {
-    "name": "lackey-mongoose-version",
-    "description": "Mongoose plugin to save old versions of saved documents",
-    "version": "1.0.2",
-    "main": "lib/version.js",
-    "repository": "git://github.com/getlackey/mongoose-version.git",
-    "author": "Enigma Marketing",
-    "contributors": [{
-        "name": "Christoph Walcher",
-        "email": "christoph.walcher@gmail.com",
-        "description": "Author of the forked plugin https://github.com/saintedlama/mongoose-version"
-    }],
-    "license": "BSD",
-    "keywords": [
-        "mongoose",
-        "plugin",
-        "version"
-    ],
-    "dependencies": {
-        "debug": "~0.8.1",
-        "xtend": "^4.0.0"
-    },
-    "devDependencies": {
-        "chai": "~1.9.1",
-        "istanbul": "^0.3.2",
-        "mocha": "~1.20.0",
-        "mongoose-text-search": "0.0.2",
-        "mongoose": "~3.8.12"
-    },
-    "scripts": {
-        "test": "mocha --recursive -R spec test/",
-        "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --recursive -- -R spec"
-    }
+  "name": "@streethub/mongoose-version",
+  "description": "Mongoose plugin to save old versions of saved documents",
+  "version": "1.1.1",
+  "main": "lib/version.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/StreetHub/mongoose-version.git"
+  },
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "version"
+  ],
+  "dependencies": {
+    "debug": "~0.8.1",
+    "xtend": "^4.0.0"
+  },
+  "devDependencies": {
+    "bluebird": "^3.3.1",
+    "chai": "~1.9.1",
+    "istanbul": "^0.3.2",
+    "mocha": "~1.20.0",
+    "mongoose-text-search": "0.0.2",
+    "mongoose": "~4.7.3"
+  },
+  "scripts": {
+    "test": "mocha --recursive -R spec test/",
+    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --recursive -- -R spec"
+  },
+  "bugs": {
+    "url": "https://github.com/StreetHub/mongoose-version/issues"
+  },
+  "homepage": "https://github.com/StreetHub/mongoose-version#readme",
+  "directories": {
+    "test": "test"
+  },
+  "author": ""
 }
