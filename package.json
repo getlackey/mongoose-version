@@ -1,39 +1,65 @@
 {
-  "name": "@streethub/mongoose-version",
-  "description": "Mongoose plugin to save old versions of saved documents",
-  "version": "1.1.1",
-  "main": "lib/version.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/StreetHub/mongoose-version.git"
+  "author": {
+    "email": "relvao@gmail.com",
+    "name": "Tiago Relvao"
   },
+  "bugs": {
+    "url": "https://github.com/TrejGun/holymotors-mongoose-versions/issues"
+  },
+  "contributors": [
+    {
+      "email": "TrejGun+OpenSource@gmail.com",
+      "name": "TrejGun"
+    },
+    {
+      "name": "Peter Kadlot"
+    },
+    {
+      "name": "Rob McCardle"
+    }
+  ],
+  "dependencies": {
+    "debug": "4.1.1"
+  },
+  "description": "Mongoose plugin to save old versions of saved documents",
+  "devDependencies": {
+    "@babel/cli": "7.4.3",
+    "@babel/core": "7.4.3",
+    "@babel/node": "7.2.2",
+    "@babel/preset-env": "7.4.3",
+    "babel-eslint": "10.0.1",
+    "eslint": "5.16.0",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-mocha": "5.3.0",
+    "eslint-plugin-node": "8.0.1",
+    "eslint-plugin-promise": "4.1.1",
+    "eslint-plugin-standard": "4.0.0",
+    "istanbul": "^0.3.2",
+    "mocha": "6.0.2",
+    "mongoose": "5.5.5",
+    "mongoose-text-search": "0.0.2"
+  },
+  "files": [
+    "dist/*",
+    "src/*"
+  ],
+  "homepage": "https://github.com/TrejGun/holymotors-mongoose-versions#readme",
   "keywords": [
     "mongoose",
     "plugin",
     "version"
   ],
-  "dependencies": {
-    "debug": "~0.8.1",
-    "xtend": "^4.0.0"
-  },
-  "devDependencies": {
-    "bluebird": "^3.3.1",
-    "chai": "~1.9.1",
-    "istanbul": "^0.3.2",
-    "mocha": "~1.20.0",
-    "mongoose-text-search": "0.0.2",
-    "mongoose": "~3.8.12"
+  "main": "./dist/index.js",
+  "module": "./src/index.js",
+  "name": "holymotors-mongoose-versions",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TrejGun/holymotors-mongoose-versions.git"
   },
   "scripts": {
-    "test": "mocha --recursive -R spec test/",
-    "cover": "istanbul cover ./node_modules/mocha/bin/_mocha --recursive -- -R spec"
+    "build": "node_modules/.bin/babel -d ./dist ./src --delete-dir-on-start",
+    "test": "NODE_ENV=test mocha"
   },
-  "bugs": {
-    "url": "https://github.com/StreetHub/mongoose-version/issues"
-  },
-  "homepage": "https://github.com/StreetHub/mongoose-version#readme",
-  "directories": {
-    "test": "test"
-  },
-  "author": ""
+  "version": "1.1.1"
 }

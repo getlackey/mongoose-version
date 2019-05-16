@@ -1,0 +1,57 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": [
+    "standard",
+    "eslint:recommended"
+  ],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": [
+    "jest"
+  ],
+  "rules": {
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2,
+        "maxEOF": 1
+      }
+    ],
+    "semi": [
+      2,
+      "always"
+    ],
+    "arrow-parens": [
+      2,
+      "as-needed"
+    ],
+    "import/no-extraneous-dependencies": [
+      0
+    ],
+    "comma-dangle": [
+      2,
+      "always-multiline"
+    ],
+    "quotes": [
+      2,
+      "double"
+    ],
+    "object-curly-spacing": [
+      2,
+      "never"
+    ],
+    "no-console": "warn"
+  }
+}
