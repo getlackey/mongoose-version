@@ -37,7 +37,7 @@
     "eslint-plugin-standard": "4.0.0",
     "istanbul": "^0.3.2",
     "mocha": "6.0.2",
-    "mongoose": "5.5.5",
+    "mongoose": "5.5.8",
     "mongoose-text-search": "0.0.2"
   },
   "files": [
@@ -59,6 +59,7 @@
   },
   "scripts": {
     "build": "node_modules/.bin/babel -d ./dist ./src --delete-dir-on-start",
+    "lint": "eslint src --fix",
     "test": "NODE_ENV=test mocha"
   },
   "version": "1.1.1"
