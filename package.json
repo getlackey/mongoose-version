@@ -62,5 +62,6 @@
     "lint": "eslint src --fix",
     "test": "NODE_ENV=test mocha"
   },
+  "sideEffects": false,
   "version": "1.1.1"
 }
