@@ -1,7 +1,6 @@
 test
 examples
 .idea
-.gitattributes
 *.tgz
 *~
 .travis.yml

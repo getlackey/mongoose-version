@@ -36,60 +36,123 @@ describe("clone-schema", function() {
 
   it("should clone all schema path with correct data types", () => {
     const testSchema = new Schema({
-      name: String,
+      string: String,
+      number: Number,
       date: Date,
+      buffer: Buffer,
+      boolean: Boolean,
+      array: Array,
+      map: Map,
+      mixed: Schema.Types.Mixed,
+      objectId: Schema.Types.ObjectId,
+      decimal128: Schema.Types.Decimal128,
     });
-    const cloned = cloneSchema(testSchema);
-    const namePath = cloned.path("name");
-    const datePath = cloned.path("date");
 
-    assert.strictEqual(namePath.options.type, String);
-    assert.strictEqual(datePath.options.type, Date);
+    const cloned = cloneSchema(testSchema);
+
+    assert.strictEqual(cloned.path("string").options.type, String);
+    assert.strictEqual(cloned.path("number").options.type, Number);
+    assert.strictEqual(cloned.path("date").options.type, Date);
+    assert.strictEqual(cloned.path("buffer").options.type, Buffer);
+    assert.strictEqual(cloned.path("boolean").options.type, Boolean);
+    assert.strictEqual(cloned.path("array").options.type, Array);
+    assert.strictEqual(cloned.path("map").options.type, Map);
+    assert.strictEqual(cloned.path("mixed").options.type, Schema.Types.Mixed);
+    assert.strictEqual(cloned.path("objectId").options.type, Schema.Types.ObjectId);
+    assert.strictEqual(cloned.path("decimal128").options.type, Schema.Types.Decimal128);
   });
 
-  it("should clone all schema path with required validators", () => {
-    const testSchema = new Schema({
-      name: {
-        type: String,
-        required: true,
+  it("should clone all schema path with build-in validators", () => {
+
+    const validators = {
+      required: [true, "valueMissing"],
+      match: [/^[a-z0-9-]$/i, "patternMismatch"],
+      enum: {
+        values: ["a", "b", "c"],
+        message: "badInput",
       },
-      date: {
-        type: Date,
-        required: true,
+      min: [1, "rangeUnderflow"],
+      max: [100, "rangeOverflow"],
+    };
+
+    const testSchema = new Schema({
+      required: {
+        type: String,
+        required: validators.required,
+      },
+      match: {
+        type: String,
+        match: validators.match,
+      },
+      enum: {
+        type: String,
+        enum: validators.enum,
+      },
+      min: {
+        type: Number,
+        min: validators.min,
+      },
+      max: {
+        type: Number,
+        max: validators.max,
       },
     });
     const cloned = cloneSchema(testSchema);
-    const namePath = cloned.path("name");
-    const datePath = cloned.path("date");
 
-    assert.strictEqual(namePath.options.required, true);
-    assert.strictEqual(namePath.validators.length, 1);
-    assert.strictEqual(datePath.options.required, true);
-    assert.strictEqual(datePath.validators.length, 1);
+    assert.strictEqual(cloned.path("required").options.required, validators.required);
+    assert.strictEqual(cloned.path("required").validators.length, 1);
+    assert.strictEqual(cloned.path("match").options.match, validators.match);
+    assert.strictEqual(cloned.path("match").validators.length, 1);
+    assert.strictEqual(cloned.path("enum").options.enum, validators.enum);
+    assert.strictEqual(cloned.path("enum").validators.length, 1);
+    assert.strictEqual(cloned.path("min").options.min, validators.min);
+    assert.strictEqual(cloned.path("min").validators.length, 1);
+    assert.strictEqual(cloned.path("max").options.max, validators.max);
+    assert.strictEqual(cloned.path("max").validators.length, 1);
   });
 
   it("should clone all schema path with custom validators", () => {
-    function validator(val) {
-      return val;
-    }
+    const single = val => val;
+    const multiple = [{
+      validator: single,
+      msg: "badInput",
+    }];
 
     const testSchema = new Schema({
-      name: {
+      single: {
         type: String,
-        validate: validator,
+        validate: single,
       },
-      date: {
-        type: Date,
-        validate: validator,
+      multiple: {
+        type: String,
+        validate: multiple,
       },
     });
     const cloned = cloneSchema(testSchema);
-    const namePath = cloned.path("name");
-    const datePath = cloned.path("date");
 
-    assert.strictEqual(namePath.options.validate, validator);
-    assert.strictEqual(namePath.validators.length, 1);
-    assert.strictEqual(datePath.options.validate, validator);
-    assert.strictEqual(datePath.validators.length, 1);
+    assert.strictEqual(cloned.path("single").options.validate, single);
+    assert.strictEqual(cloned.path("single").validators.length, 1);
+    assert.strictEqual(cloned.path("multiple").options.validate, multiple);
+    assert.strictEqual(cloned.path("multiple").validators.length, 1);
+  });
+
+  it("should clone all schema path with multiple validators", () => {
+    const validators = {
+      required: [() => true, "valueMissing"],
+      custom: val => val,
+    };
+
+    const testSchema = new Schema({
+      number: {
+        type: String,
+        required: validators.required,
+        validate: validators.custom,
+      },
+    });
+    const cloned = cloneSchema(testSchema);
+
+    assert.strictEqual(cloned.path("number").options.required, validators.required);
+    assert.strictEqual(cloned.path("number").options.validate, validators.custom);
+    assert.strictEqual(cloned.path("number").validators.length, 2);
   });
 });

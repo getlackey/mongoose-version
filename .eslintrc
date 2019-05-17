@@ -9,17 +9,11 @@
   ],
   "env": {
     "es6": true,
-    "browser": true,
     "node": true,
-    "jest": true
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+    "mocha": true
   },
   "plugins": [
-    "jest"
+    "mocha"
   ],
   "rules": {
     "no-multiple-empty-lines": [
