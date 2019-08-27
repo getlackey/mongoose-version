@@ -10,7 +10,7 @@ var _saveCollection = _interopRequireDefault(require("./save-collection"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _default(schema, options) {
-  if (typeof options == "string") {
+  if (typeof options === "string") {
     options = {
       collection: options
     };

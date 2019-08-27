@@ -7,7 +7,7 @@ exports.default = _default;
 
 function _default(schema, options) {
   for (const key in options) {
-    if (options.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(options, key)) {
       schema.set(key, options[key]);
     }
   }

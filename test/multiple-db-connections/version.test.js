@@ -10,7 +10,7 @@ describe("version", function() {
   afterEach(mongotest.disconnect());
 
   describe("#VersionModel", function() {
-    it("should expose a version model in the original schema", () => {
+    it("should expose a version model in the original schema", function() {
       const testSchema = new Schema();
 
       testSchema.plugin(version, {
@@ -23,7 +23,7 @@ describe("version", function() {
     });
   });
 
-  it("should save a version model when saving origin model", () => {
+  it("should save a version model when saving origin model", function() {
     const testSchema = new Schema({
       name: String,
     });
@@ -52,7 +52,7 @@ describe("version", function() {
       });
   });
 
-  it("should NOT save a version model when saving origin model fails", () => {
+  it("should NOT save a version model when saving origin model fails", function() {
     const testSchema = new Schema({
       name: String,
     });
@@ -124,7 +124,7 @@ describe("version", function() {
       });
   });
 
-  it("should save the correct version, defined at the versionKey of the origin model", () => {
+  it("should save the correct version, defined at the versionKey of the origin model", function() {
     const testSchema = new Schema({
       name: String,
     }, {
@@ -204,7 +204,7 @@ describe("version", function() {
     assert.strictEqual(Test.VersionedModel.collection.name, "should_accept_string");
   });
 
-  it("should save a version model in a collection when using `collection` strategy", () => {
+  it("should save a version model in a collection when using `collection` strategy", function() {
     const testSchema = new Schema({
       name: String,
       desc: String,

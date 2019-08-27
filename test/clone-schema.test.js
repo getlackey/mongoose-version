@@ -13,7 +13,7 @@ const selectPaths = function(schema) {
 };
 
 describe("clone-schema", function() {
-  it("should clone schema", () => {
+  it("should clone schema", function() {
     const testSchema = new Schema({
       name: String,
       date: Date,
@@ -23,7 +23,7 @@ describe("clone-schema", function() {
     assert.ok(cloned);
   });
 
-  it("should clone all schema path", () => {
+  it("should clone all schema path", function() {
     const testSchema = new Schema({
       name: String,
       date: Date,
@@ -34,7 +34,7 @@ describe("clone-schema", function() {
     assert.strictEqual(paths.length, 3); // 2 fields plus _id
   });
 
-  it("should clone all schema path with correct data types", () => {
+  it("should clone all schema path with correct data types", function() {
     const testSchema = new Schema({
       string: String,
       number: Number,
@@ -62,8 +62,7 @@ describe("clone-schema", function() {
     assert.strictEqual(cloned.path("decimal128").options.type, Schema.Types.Decimal128);
   });
 
-  it("should clone all schema path with build-in validators", () => {
-
+  it("should clone all schema path with build-in validators", function() {
     const validators = {
       required: [true, "valueMissing"],
       match: [/^[a-z0-9-]$/i, "patternMismatch"],
@@ -111,7 +110,7 @@ describe("clone-schema", function() {
     assert.strictEqual(cloned.path("max").validators.length, 1);
   });
 
-  it("should clone all schema path with custom validators", () => {
+  it("should clone all schema path with custom validators", function() {
     const single = val => val;
     const multiple = [{
       validator: single,
@@ -136,7 +135,7 @@ describe("clone-schema", function() {
     assert.strictEqual(cloned.path("multiple").validators.length, 1);
   });
 
-  it("should clone all schema path with multiple validators", () => {
+  it("should clone all schema path with multiple validators", function() {
     const validators = {
       required: [() => true, "valueMissing"],
       custom: val => val,

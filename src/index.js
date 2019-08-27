@@ -1,7 +1,8 @@
 import saveCollection from "./save-collection";
 
+
 export default function(schema, options) {
-  if (typeof (options) == "string") {
+  if (typeof options === "string") {
     options = {
       collection: options,
     };

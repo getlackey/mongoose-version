@@ -63,6 +63,8 @@ function _default(schema, options) {
       }).sort({
         refVersion: -1
       }).limit(1).exec(function (err, docs) {
+        if (err) debug("SAVE", err);
+
         if (docs.length !== 0 && docs[0].refVersion > (self._doc[schema.options.versionKey] || 0)) {
           const error = new _version.default({}, 0, []);
           debug(error);

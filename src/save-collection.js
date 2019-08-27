@@ -2,7 +2,9 @@ import cloneSchema from "./clone-schema";
 import setSchemaOptions from "./set-schema-options";
 import VersionError from "mongoose/lib/error/version";
 
+
 const debug = require("debug")("mongoose:version");
+
 
 export default function(schema, options) {
   const versionedSchema = cloneSchema(schema, options.mongoose);
@@ -54,6 +56,7 @@ export default function(schema, options) {
         .sort({refVersion: -1})
         .limit(1)
         .exec(function(err, docs) {
+          if (err) debug("SAVE", err);
           if (docs.length !== 0 && docs[0].refVersion > (self._doc[schema.options.versionKey] || 0)) {
             const error = new VersionError({}, 0, []);
             debug(error);

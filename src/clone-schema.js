@@ -1,7 +1,7 @@
 import defaultMongoose from "mongoose";
 
-export default function(schema, mongoose = defaultMongoose) {
 
+export default function(schema, mongoose = defaultMongoose) {
   const clonedSchema = new mongoose.Schema();
 
   schema.eachPath((key, path) => {

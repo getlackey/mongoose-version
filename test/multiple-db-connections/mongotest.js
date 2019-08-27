@@ -7,13 +7,13 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
 function dropCollections(collections, index, cb) {
-  if (typeof (index) == "function") {
+  if (typeof index === "function") {
     cb = index;
     index = 0;
   }
 
   if (index < collections.length) {
-    module.exports.connection.db.dropCollection(collections[index], function(err) {
+    mongotest.connection.db.dropCollection(collections[index], function(err) {
       assert.ifError(err);
 
       dropCollections(collections, index + 1, cb);
@@ -23,7 +23,7 @@ function dropCollections(collections, index, cb) {
   }
 }
 
-module.exports = {
+const mongotest = {
   connection: {},
   prepareDb: function(connectionString, options) {
     options = options || {};
@@ -31,10 +31,10 @@ module.exports = {
     return function(cb) {
       this.timeout(options.timeout);
 
-      module.exports.connection = mongoose.createConnection(connectionString, function(err) {
+      mongotest.connection = mongoose.createConnection(connectionString, function(err) {
         assert.ifError(err);
 
-        module.exports.connection.db.collections(function(err, collections) {
+        mongotest.connection.db.collections(function(err, collections) {
           assert.ifError(err);
 
           const collectionsToDrop = collections
@@ -57,3 +57,5 @@ module.exports = {
     };
   },
 };
+
+export default mongotest;

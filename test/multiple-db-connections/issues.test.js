@@ -10,7 +10,7 @@ describe("issues", function() {
   beforeEach(mongotest.prepareDb("mongodb://localhost/mongoose_version_issues_tests"));
   afterEach(mongotest.disconnect());
 
-  it("should play nice with text search plugin", () => {
+  it("should play nice with text search plugin", function() {
     const Page = pageModel(mongotest.connection);
     const page = new Page({
       title: "Title",
@@ -29,7 +29,7 @@ describe("issues", function() {
       });
   });
 
-  it("should allow to create an empty versioned model", () => {
+  it("should allow to create an empty versioned model", function() {
     const UserSchema = new Schema({});
 
     UserSchema.plugin(version, {
@@ -50,7 +50,7 @@ describe("issues", function() {
       });
   });
 
-  it("should delete versioned model when deleting the model", () => {
+  it("should delete versioned model when deleting the model", function() {
     const UserSchema = new Schema({});
 
     UserSchema.plugin(version, {
@@ -75,7 +75,7 @@ describe("issues", function() {
       });
   });
 
-  it("should delete versioned model when deleting the model in collection mode", () => {
+  it("should delete versioned model when deleting the model in collection mode", function() {
     const UserSchema = new Schema({});
 
     UserSchema.plugin(version, {
@@ -101,7 +101,7 @@ describe("issues", function() {
       });
   });
 
-  it("should ignore unique indexes in cloned model", () => {
+  it("should ignore unique indexes in cloned model", function() {
     const UserSchema = new Schema({
       module: {
         type: Schema.Types.ObjectId,
@@ -153,7 +153,7 @@ describe("issues", function() {
       });
   });
 
-  it("should not break when using the plugin with collection strategy #10", () => {
+  it("should not break when using the plugin with collection strategy #10", function() {
     const schema = new Schema({
       title: {
         type: String,
