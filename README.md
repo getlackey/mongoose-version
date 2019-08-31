@@ -1,3 +1,5 @@
+![travis](https://travis-ci.org/TrejGun/trejgun-mongoose-versions.svg?branch=master)
+
 # Mongoose version
 
 Mongoose version is a mongoose plugin to save document data versions. Documents are saved to a "versioned" document collection before saving.
