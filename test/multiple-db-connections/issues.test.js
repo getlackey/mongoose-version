@@ -9,7 +9,7 @@ var expect = require('chai').expect,
     version = require('../../lib/version'),
     pageModel = require('../fixtures/page');
 
-describe('issues', function () {
+describe('multiple-db-connections > issues', function () {
     beforeEach(mongotest.prepareDb('mongodb://localhost/mongoose_version_issues_tests'));
     afterEach(mongotest.disconnect());
 
