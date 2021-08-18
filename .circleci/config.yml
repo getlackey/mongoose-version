@@ -1,0 +1,122 @@
+version: 2.1
+
+commands:
+  bootstrap_node_environment:
+    description: "Bootstraps nvm, node and npm"
+    steps:
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-dependencies
+          command: npm ci
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+  upgrade-npm-version:
+    description: Upgrade version
+    steps:
+      - run:
+          name: Upgrade package version
+          command: |
+            git config --global user.email "tech+robot@streethub.com"
+            git config --global user.name "StreetHubRobot"
+            npm version -m "[skip ci] upgrade $VERSION" $VERSION
+            git push origin master
+            git push origin --tags
+  publish:
+    description: Publish package to private npm
+    steps:
+      - run:
+          name: Publish package
+          command: npm publish
+
+jobs:
+  test:
+    docker:
+      - image: 771426788622.dkr.ecr.eu-west-1.amazonaws.com/trouva-node:20200525-150520
+    steps:
+      - checkout
+      - bootstrap_node_environment
+      - run: npm run test
+  publish-major:
+    environment:
+      VERSION: major
+    docker:
+      - image: 771426788622.dkr.ecr.eu-west-1.amazonaws.com/trouva-node:20200525-150520
+    steps:
+      - checkout
+      - upgrade-npm-version
+      - publish
+  publish-minor:
+    environment:
+      VERSION: minor
+    docker:
+      - image: 771426788622.dkr.ecr.eu-west-1.amazonaws.com/trouva-node:20200525-150520
+    steps:
+      - checkout
+      - upgrade-npm-version
+      - publish
+  publish-patch:
+    environment:
+      VERSION: patch
+    docker:
+      - image: 771426788622.dkr.ecr.eu-west-1.amazonaws.com/trouva-node:20200525-150520
+    steps:
+      - checkout
+      - upgrade-npm-version
+      - publish
+
+workflows:
+  version: 2
+  test-and-deploy:
+    jobs:
+      - test
+      - upgrade-as-patch:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only:
+                - master
+      - publish-patch:
+          requires:
+            - test
+            - upgrade-as-patch
+          filters:
+            branches:
+              only:
+                - master
+      - upgrade-as-minor:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only:
+                - master
+      - publish-minor:
+          requires:
+            - test
+            - upgrade-as-minor
+          filters:
+            branches:
+              only:
+                - master
+      - upgrade-as-major:
+          type: approval
+          requires:
+          - test
+          filters:
+            branches:
+              only:
+                - master
+      - publish-major:
+          requires:
+            - test
+            - upgrade-as-major
+          filters:
+            branches:
+              only:
+                - master

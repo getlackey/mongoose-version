@@ -1,57 +1,71 @@
-# Mongoose version
+# @streethub/mongoose-version
 
-Lackey's Mongoose version is a mongoose plugin to save document data versions. Documents are saved to a "versioned" document collection before saving.
+`@streethub/mongoose-version` is a mongoose plugin to add [Document Versioning](https://www.mongodb.com/blog/post/building-with-patterns-the-document-versioning-pattern) to a mongoose's Schema.
 
-This module is a fork of [mongoose-version](https://github.com/saintedlama/mongoose-version). We needed to support multiple database connections and some other features incompatible with the original module.
+The documents for a given Schema are versioned in a separate collection before being saving.
 
 ## Installation
 
-    $ npm install lackey-mongoose-version
+```bash
+$ npm install @streethub/mongoose-version
+```
 
 ## Usage
-To use lackey-mongoose-version for an existing mongoose schema you'll have to require and plugin lackey-mongoose-version into the existing schema.
 
-The following schema definition defines a "Page" schema, and uses mongoose-version plugin with default options
+```js
+const mongoose = require("mongoose");
+const version = require("@streethub/mongoose-version");
 
-    var mongoose = require('mongoose'),
-        Schema = mongoose.Schema,
-        version = require('lackey-mongoose-version');
-    
-    var Page = new Schema({
-        title : { type : String, required : true},
-        content : { type : String, required : true },
-        path : { type : String, required : true},
-        tags : [String],
-    
-        lastModified : Date,
-        created : Date
-    });
-    
-    Page.plugin(version);
+const Page = new mongoose.Schema({
+    title: String,
+    content: String,
+});
 
-Lackey's Mongoose Backup will define a schema that has a refId field pointing to the original model and a version array containing cloned copies of the backed up model.
+Page.plugin(version);
+```
+
+This plugin will clone the original Schema and add a field called `refId` pointing to the original model, and a version array containing cloned copies of the backed up model.
 
 Mongoose-version will add a static field to Page, that is "VersionedModel" that can be used to access the versioned
 model of page, for example for querying old versions of a document.
 
-## Option keys and defaults
-* collection: name of the collection to persist versions to. The default is 'versions'. You should supply this option if you're using mongoose-version on more than one schema.
-* suppressVersionIncrement: mongoose-version will not increment the version of the saved model before saving the model by default. To turn on auto version increment set this option to false. Default: `true`
-* mongoose: Pass a mongoose instance to work with
-* removeVersions: Removes versions when origin document is removed. Defaults to `false`
-* Options are passed to a newly created mongoose schemas as settings, so you may use any [option supported by mongoose](http://mongoosejs.com/docs/guide.html#options)
+### Options
 
-In case you only want to specify the collection name, you can pass a string instance to options that is taken as collection name. Options may be passed as follows:
+| Option        | Default      | Description |
+| -----------   | -----------  | ----------- |
+| collection    | `"versions"` | The name of the collection to persist versions. You must add this option if you're using this plugin on more than one schema. Otherwise, all schemas will have the same versions' collection |
+| suppressVersionIncrement | `true` | Suppress increment of the version of the saved model before saving the model |
+| mongoose | `require("mongoose")` | Pass a mongoose instance to work with |
+| removeVersions | `false` | Remove all the versions when original document is removed |
 
-    Page.plugin(version, { collection: 'Page__versions' });
 
-## Misc
+Options are passed to the cloned Schema as settings. Therefore, you can also pass any of the [Schema's options supported by mongoose](http://mongoosejs.com/docs/guide.html#options). A shorthand is available in case you only want to customise the collection's name. Otherwise, pass an options object as the second argument of the plugin.
 
-### Debug Messages
+```js
+Page.plugin(version, 'page_revisions');
 
-Mongoose-version uses the [debug module](https://github.com/visionmedia/debug) for debug messages. You can enable mongoose-version debug logs by setting the
+// is the same as
+
+Page.plugin(version, {
+    collection: 'page_revisions'
+});
+```
+
+## Test
+
+This plugin uses `mocha` to run the tests.
+
+```bash
+$ npm run test
+```
+
+## Debug
+
+This plugin uses the [debug](https://github.com/visionmedia/debug) to display debug messages. You can enable it by setting the
 `DEBUG` environment variable to `mongoose:version`.
 
-    DEBUG=mongoose:version
+```bash
+$ DEBUG=mongoose:version
+```
 
-Debug messages are logged if a version was persisted to mongodb or a version was removed from mongodb.
+Debug messages appear if a version was persisted to MongoDB or if a version was removed from MongoDB.
