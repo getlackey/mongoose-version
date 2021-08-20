@@ -1,20 +1,10 @@
-# test related
-coverage
-testing
-testapp
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 
-# OSX
-.DS_Store
+# dependencies
+/node_modules/
 
-# npm
-node_modules
-npm-debug.log
-
-# IDE
-.idea/
-*~
-*.swp
-
-# Things
-README.html
-*.tgz
+# misc
+/.nyc_output
+/.eslintcache
+/coverage/
+/npm-debug.log*

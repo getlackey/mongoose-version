@@ -19,16 +19,28 @@
   "devDependencies": {
     "bluebird": "^3.3.1",
     "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "mocha": "^9.0.3",
+    "mongoose": "~5.11.10",
     "mongoose-text-search": "0.0.2",
-    "mongoose": "~5.11.10"
+    "nyc": "^15.1.0",
+    "prettier": "2.3.2"
   },
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive",
+    "coverage": "nyc npm run test",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix"
   },
   "bugs": {
     "url": "https://github.com/StreetHub/mongoose-version/issues"
   },
+  "engines": {
+    "node": "12.* || 14.* || >= 16"
+  },
   "homepage": "https://github.com/StreetHub/mongoose-version#readme",
-  "author": ""
+  "author": "",
+  "license": "MIT"
 }
